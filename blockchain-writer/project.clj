@@ -22,4 +22,7 @@
                   :dependencies   [[clj-http "2.1.0"]
                                    [integrant/repl "0.2.0"]
                                    [eftest "0.4.1"]
-                                   [kerodon "0.9.0"]]}})
+                                   [kerodon "0.9.0"]]
+                  :plugins [[lein-cloverage "1.0.10"]
+                            [lein-kibit "0.1.6"]
+                            [jonase/eastwood "0.2.5"]]}})

@@ -24,5 +24,5 @@
                                    [eftest "0.4.1"]
                                    [kerodon "0.9.0"]]
                   :plugins [[lein-cloverage "1.0.10"]
-                             [lein-kibit "0.1.6"]
-                             [jonase/eastwood "0.2.5"]]}})
+                            [lein-kibit "0.1.6"]
+                            [jonase/eastwood "0.2.5"]]}})
