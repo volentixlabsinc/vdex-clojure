@@ -1,0 +1,12 @@
+{:duct.core/project-ns  snapshot-maker
+ :duct.core/environment :production
+
+ :duct.module/logging {}
+ :duct.module.web/api {}
+ :snapshot-maker.handler/welcome {}
+
+ :duct.server.http/jetty
+ {:port #duct/env ["SNAPSHOT-MAKER-PORT" Int :or 5000]
+  :handler #ig/ref :snapshot-maker.handler/welcome
+  :logger  #ig/ref :duct/logger}}
+

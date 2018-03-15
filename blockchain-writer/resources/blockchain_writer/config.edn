@@ -1,0 +1,12 @@
+{:duct.core/project-ns  blockchain-writer
+ :duct.core/environment :production
+
+ :duct.module/logging {}
+ :duct.module.web/api {}
+ :blockchain-writer.handler/welcome {}
+
+ :duct.server.http/jetty
+ {:port #duct/env ["BLOCKCHAIN-WRITER-PORT" Int :or 5000]
+  :handler #ig/ref :blockchain-writer.handler/welcome
+  :logger  #ig/ref :duct/logger}}
+

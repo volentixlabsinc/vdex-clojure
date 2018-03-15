@@ -1,0 +1,11 @@
+{:duct.core/project-ns  transaction-verification
+ :duct.core/environment :production
+
+ :duct.module/logging {}
+ :duct.module.web/api {}
+ :transaction-verification.handler/welcome {}
+
+ :duct.server.http/jetty
+ {:port #duct/env ["TRANSACTION-VERIFICATION-PORT" Int :or 5000]
+  :handler #ig/ref :transaction-verification.handler/welcome
+  :logger  #ig/ref :duct/logger}}

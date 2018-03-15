@@ -1,0 +1,11 @@
+{:duct.core/project-ns  matching-engine
+ :duct.core/environment :production
+
+ :duct.module/logging {}
+ :duct.module.web/api {}
+ :matching-engine.handler/welcome {}
+
+ :duct.server.http/jetty
+ {:port #duct/env ["MATCHING-ENGINE-PORT" Int :or 5000]
+  :handler #ig/ref :matching-engine.handler/welcome
+  :logger  #ig/ref :duct/logger}}

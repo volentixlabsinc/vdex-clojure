@@ -1,0 +1,11 @@
+{:duct.core/project-ns  mempool
+ :duct.core/environment :production
+
+ :duct.module/logging {}
+ :duct.module.web/api {}
+ :mempool.handler/welcome {}
+
+ :duct.server.http/jetty
+  {:port #duct/env ["MEMPOOL-PORT" Int :or 5000]
+   :handler #ig/ref :mempool.handler/welcome
+   :logger  #ig/ref :duct/logger}}
