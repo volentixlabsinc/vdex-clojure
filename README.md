@@ -1,29 +1,39 @@
-# README #
+# vDex #
 
-This README would normally document whatever steps are necessary to get your application up and running.
 
-### What is this repository for? ###
+## Conventions
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* Please follow coding style defined by [`.editorconfig`](http://editorconfig.org)
+ and [The Clojure Style Guide](https://github.com/bbatsov/clojure-style-guide)
+* Write [good commit messages](https://chris.beams.io/posts/git-commit/)
+ and provide an issue ID in a commit message prefixed by `#`
 
-### How do I get set up? ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+## Prerequisites
 
-### Contribution guidelines ###
+* [Java](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+* [Leiningen](https://leiningen.org/)
+* [Docker compose](https://docs.docker.com/compose/install/)
 
-* Writing tests
-* Code review
-* Other guidelines
 
-### Who do I talk to? ###
+## Running microservices ##
 
-* Repo owner or admin
-* Other community or team contact
+To run the microservices and Kafka node, run following command from root directory of the repo:
+
+```sh
+docker-compose up
+```
+
+or for silent start
+
+```sh
+docker-compose up -d
+```
+
+after code changes, run
+
+```sh
+docker-compose up -d --build
+```
+
+this command takes several minutes to complete.
