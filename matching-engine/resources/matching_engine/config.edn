@@ -3,7 +3,9 @@
 
  :duct.module/logging {}
  :duct.module.web/api {}
- :matching-engine.handler/welcome {}
+ :matching-engine.handler/welcome {:dir-path "state"}
+
+ :matching-engine.store/file {:dir-path #duct/env ["STORE_DIR" Str :or "store"]}
 
  :duct.server.http/jetty
  {:port #duct/env ["MATCHING-ENGINE-PORT" Int :or 5000]
