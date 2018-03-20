@@ -30,7 +30,7 @@ or for silent start
 docker-compose up -d
 ```
 
-after code changes, run
+after Dockerfile changes, run
 
 ```sh
 docker-compose up -d --build
