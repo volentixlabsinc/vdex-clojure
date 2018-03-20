@@ -1,11 +1,11 @@
 (ns matching-engine.launch-test
   (:require
-   [clojure.test :refer :all]
-   [clojure.java.io :as io]
-   [clj-http.client :as http]
-   [duct.core       :as duct]
-   [duct.logger     :as logger]
-   [integrant.core  :as ig]))
+    [clojure.test :refer :all]
+    [clojure.java.io :as io]
+    [clj-http.client :as http]
+    [duct.core       :as duct]
+    [duct.logger     :as logger]
+    [integrant.core  :as ig]))
 
 (duct/load-hierarchy)
 
