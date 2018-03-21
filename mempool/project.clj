@@ -5,7 +5,9 @@
   :dependencies [[org.clojure/clojure "1.9.0-beta4"]
                  [duct/core "0.6.2"]
                  [duct/module.logging "0.3.1"]
-                 [duct/module.web "0.6.4"]]
+                 [duct/module.web "0.6.4"]
+                 [ring/ring-json "0.4.0"]
+                 [org.apache.kafka/kafka_2.12 "1.0.1"]]
   :plugins [[duct/lein-duct "0.10.6"]]
   :main ^:skip-aot mempool.main
   :resource-paths ["resources" "target/resources"]

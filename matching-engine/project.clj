@@ -7,7 +7,7 @@
                  [duct/module.logging "0.3.1"]
                  [duct/module.web "0.6.4"]
                  [org.apache.kafka/kafka_2.12 "1.0.1"]
-                 [org.apache.kafka/kafka-streams "1.0.1"] ]
+                 [org.apache.kafka/kafka-streams "1.0.1"]]
   :plugins [[duct/lein-duct "0.10.6"]]
   :main ^:skip-aot matching-engine.main
   :resource-paths ["resources" "target/resources"]
