@@ -1,10 +1,11 @@
-(ns matching-engine.main
+(ns test-performance.main
   (:gen-class)
   (:require [clojure.java.io :as io]
-            [duct.core :as duct]))
+            [duct.core :as duct]
+            [clj-time.core :as time]))
 
 (defn -main [& args]
-  (let [config (-> "matching_engine/config.edn" io/resource duct/read-config)
+  (let [config (-> "test_performance/config.edn" io/resource duct/read-config)
         keys (-> args duct/parse-keys seq)]
     (duct/load-hierarchy)
     (if keys
