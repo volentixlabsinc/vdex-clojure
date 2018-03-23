@@ -3,6 +3,8 @@ version: '3'
 services:
   blockchain-writer:
     build: ./blockchain-writer
+    depends_on:
+     - kafka-started
     ports:
      - "5000:5000"
     volumes:
@@ -19,6 +21,8 @@ services:
 
   mempool:
     build: ./mempool
+    depends_on:
+     - kafka-started
     ports:
      - "5002:5000"
     volumes:

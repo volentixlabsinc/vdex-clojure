@@ -6,7 +6,8 @@
 (duct/load-hierarchy)
 
 (defn -main [& args]
-  (let [keys (or (duct/parse-keys args) [:duct/daemon])]
-    (-> (duct/read-config (io/resource "blockchain_writer/config.edn"))
-        (duct/prep keys)
-        (duct/exec keys))))
+  (let [keys (duct/parse-keys args)
+        config (duct/read-config (io/resource "blockchain_writer/config.edn"))]
+    (if keys
+      (-> config (duct/prep keys) (duct/exec keys))
+      (-> config (duct/prep keys) duct/exec))))

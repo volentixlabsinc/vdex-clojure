@@ -10,7 +10,7 @@
                  [me.raynes/fs "1.4.6"]
                  [org.clojure/data.fressian "0.2.1"]
                  [org.apache.kafka/kafka_2.12 "1.0.1"]
-                 [org.apache.kafka/kafka-streams "1.0.1"] ]
+                 [org.apache.kafka/kafka-streams "1.0.1"]]
   :plugins [[duct/lein-duct "0.10.6"]]
   :main ^:skip-aot matching-engine.main
   :resource-paths ["resources" "target/resources"]

@@ -5,6 +5,10 @@
  :duct.module.web/api {}
  :blockchain-writer.handler/welcome {}
 
+ :blockchain-writer.handler/kafka-consumer
+ {:logger #ig/ref :duct/logger
+  :kafka-host #duct/env ["KAFKA_HOST" Str :or "localhost:9092"]}
+
  :duct.server.http/jetty
  {:port #duct/env ["BLOCKCHAIN-WRITER-PORT" Int :or 5000]
   :handler #ig/ref :blockchain-writer.handler/welcome
