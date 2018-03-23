@@ -3,9 +3,12 @@
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.9.0"]
+                 [org.clojure/core.async "0.3.442"]
                  [duct/core "0.6.2"]
                  [duct/module.logging "0.3.1"]
                  [duct/module.web "0.6.4"]
+                 [me.raynes/fs "1.4.6"]
+                 [org.clojure/data.fressian "0.2.1"]
                  [org.apache.kafka/kafka_2.12 "1.0.1"]
                  [org.apache.kafka/kafka-streams "1.0.1"]]
   :plugins [[duct/lein-duct "0.10.6"]]

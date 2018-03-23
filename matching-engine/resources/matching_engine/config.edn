@@ -3,7 +3,17 @@
 
  :duct.module/logging {}
  :duct.module.web/api {}
- :matching-engine.handler/welcome {}
+ :matching-engine.handler/welcome {:dir-path "state"}
+
+ :matching-engine.store/file {:dir-path #duct/env ["STORE_DIR" Str :or "store"]}
+
+ :matching-engine.handler/kafka-pipe
+ {:logger #ig/ref :duct/logger
+  :kafka-host #duct/env ["KAFKA_HOST" Str :or "localhost:9092"]}
+
+ :matching-engine.handler/kafka-pipe
+ {:logger #ig/ref :duct/logger
+  :kafka-host #duct/env ["KAFKA_HOST" Str :or "localhost:9092"]}
 
  :matching-engine.handler/kafka-pipe
  {:logger #ig/ref :duct/logger
