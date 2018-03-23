@@ -1,0 +1,8 @@
+{:duct.core/project-ns  test-flow
+ :duct.core/environment :production
+
+ :duct.module/logging {}
+
+ :test-flow/simulator
+ {:simulation-db-uri "datomic:free://localhost:4334/vdex-sim"
+  :results-db-uri    "datomic:free://localhost:4334/vdex-actions"}}
