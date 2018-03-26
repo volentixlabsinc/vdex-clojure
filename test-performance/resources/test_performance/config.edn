@@ -1,0 +1,5 @@
+{:duct.core/project-ns  test-performance
+ :duct.core/environment :production
+
+ :duct.module/logging {}
+ :test-performance/benchmark {}}

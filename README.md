@@ -37,3 +37,21 @@ docker-compose up -d --build
 ```
 
 this command takes several minutes to complete.
+
+## Testing performance (example)
+
+In tab 1  
+```bash
+# start matching engine service in one tab
+# for instance
+cd matching-engine
+lein run
+```
+
+In tab 2
+```bash
+cd test-performance
+lein run
+```
+
+Open report file generated after test finish (you will get file url in command line).
