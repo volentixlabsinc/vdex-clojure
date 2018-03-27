@@ -1,4 +1,18 @@
-# Cosmos examples
+# Cosmos
+
+The goal of a blockchain is to represent a single state being concurrently edited. In order to avoid conflicts between concurrent edits, it represents the state as a ledger: a series of transformations (transactions) applied to an initial state. The blockchain must allow all connected nodes to agree about which transformations are valid, and their ordering within the ledger.
+
+To accomplish this, a blockchain is composed of three protocols:
+
+- `network protocol`,
+- `consensus protocol`,
+- `transaction protocol`
+
+The `network protocol` is how nodes in the network tell each other about new transactions, blocks, and other nodes; usually a p2p gossip network.
+
+The `consensus protocol` is the set of rules that nodes should follow to determine which particular ordered set of transformations should be in the ledger at a given moment. In Bitcoin, the chain with the highest difficulty seen by a node is treated as authoritatively correct.
+
+The `transaction protocol` describes what makes transactions valid, and how they should mutate the blockchain's state.
 
 ## Usage
 
@@ -6,10 +20,22 @@
 npm install lotion
 ```
 
+## Lotion.js
+
+Lotion is a new way to create blockchain apps in JavaScript. It builds on top of Tendermint using the ABCI protocol so it can easily interoperate with other blockchains on the Cosmos Network using IBC
+
+When you're writing a Lotion app, you're only responsible for writing the transaction protocol. Under the hood, Tendermint is handling the consensus and network protocols. When you start your lotion app, a Tendermint node is also started which will handle all of the communication with other nodes running your lotion app
+
 ## Examples
 
-### 1 - start lotion
+### 1 - start lotion.js app node
+
+This is example how to launch lotion node and how we can call API from command line.
+
 ```bash
+# install dependencies
+npm install
+
 # start app
 sh examples/examples/1_start_lotion/start_app.sh
 sh examples/examples/1_start_lotion/query_app.sh
@@ -24,3 +50,37 @@ sh examples/examples/1_start_lotion/query_app.sh
 # Query state
 # {"count":1}
 ```
+
+### 2 - use example Lotion coin
+
+```bash
+# install Lotion coin
+sudo npm install -g lotion      --unsafe-perm=true --allow-root
+sudo npm install -g lotion-coin --unsafe-perm=true --allow-root
+
+lcoin init
+lcoin start
+
+sh examples/2_lotion_coin.sh
+```
+
+
+## Interesting libraries
+
+- `SHA` on pure JavaScript 
+https://www.npmjs.com/package/sha.js
+- native bindings to bitcoin-core/secp256k1
+https://www.npmjs.com/package/secp256k1
+- Fast elliptic-curve cryptography in a plain javascript implementation
+https://github.com/indutny/elliptic
+- Search for a key across multiple discovery networks and find peers who answer.
+Currently searches across and advertises on the Bittorrent DHT, centralized DNS servers and Multicast DNS simultaneously.Uses the bittorrent-dht and dns-discovery modules.
+https://www.npmjs.com/package/discovery-channel
+- A tcp/utp server that auto announces itself using discovery-channel. Basically a server-only version of discovery-swarm
+https://www.npmjs.com/package/discovery-server
+- A network swarm that uses discovery-channel to find peers
+https://github.com/mafintosh/discovery-swarm
+- Proto Buffer serializtion
+https://www.npmjs.com/package/protobufjs
+- A JS RPC client for Tendermint nodes.
+https://www.npmjs.com/package/tendermint

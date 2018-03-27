@@ -12,6 +12,8 @@
   "keywords": [],
   "author": "Mariusz Jachimowicz",
   "dependencies": {
-    "lotion": "^0.1.17"
+    "lotion": "^0.1.17",
+    "lotion-coin": "0.0.1",
+    "axios": "^0.16.2"
   }
 }
