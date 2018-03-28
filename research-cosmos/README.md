@@ -58,6 +58,8 @@ sh query_app.sh
 
 ### 2 - use example Lotion coin
 
+Example custom coin module
+
 ```bash
 # install Lotion coin
 sudo npm install -g lotion      --unsafe-perm=true --allow-root
@@ -67,7 +69,6 @@ sudo npm install -g lotion-coin --unsafe-perm=true --allow-root
 lcoin init
 lcoin start
 
-cd 
 cd examples/2_lotion_coin
 node app.js
 ```
@@ -79,6 +80,24 @@ My key pair
 Initial application state
 - lotion-data folder
 Folder with genesis file, validators and internal data
+
+### 3 - Lotion wallet
+
+Example wallet usage
+
+```bash
+
+cd examples/3_lotion_wallet
+
+npm install
+
+# tab 1 - start app
+node app.js
+
+# tab 2 - run wallet
+# update GCI addres in wallet-usage.js
+node wallet-usage.js
+```
 
 ## Interesting libraries
 
