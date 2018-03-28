@@ -26,7 +26,8 @@ Lotion is a new way to create blockchain apps in JavaScript. It builds on top of
 
 When you're writing a Lotion app, you're only responsible for writing the transaction protocol. Under the hood, Tendermint is handling the consensus and network protocols. When you start your lotion app, a Tendermint node is also started which will handle all of the communication with other nodes running your lotion app
 
-## Examples
+### Lotion.js app architecture
+![Architecture](docs/cosmos_app.png)
 
 ### 1 - start lotion.js app node
 
@@ -36,9 +37,13 @@ This is example how to launch lotion node and how we can call API from command l
 # install dependencies
 npm install
 
-# start app
-sh examples/examples/1_start_lotion/start_app.sh
-sh examples/examples/1_start_lotion/query_app.sh
+cd examples/examples/1_start_lotion
+
+# tab 1 - start app
+node app.js
+
+# tab 2 - query from command line
+sh query_app.sh
 
 ## results
 # Query state
@@ -58,14 +63,26 @@ sh examples/examples/1_start_lotion/query_app.sh
 sudo npm install -g lotion      --unsafe-perm=true --allow-root
 sudo npm install -g lotion-coin --unsafe-perm=true --allow-root
 
+# tab 1
 lcoin init
 lcoin start
 
-sh examples/2_lotion_coin.sh
+cd 
+cd examples/2_lotion_coin
+node app.js
 ```
+It will generate:
 
+- credentials.json
+My key pair
+- initial-state.json
+Initial application state
+- lotion-data folder
+Folder with genesis file, validators and internal data
 
 ## Interesting libraries
+
+### Node
 
 - `SHA` on pure JavaScript 
 https://www.npmjs.com/package/sha.js
@@ -84,3 +101,10 @@ https://github.com/mafintosh/discovery-swarm
 https://www.npmjs.com/package/protobufjs
 - A JS RPC client for Tendermint nodes.
 https://www.npmjs.com/package/tendermint
+
+### Java
+
+- https://github.com/jTendermint
+- https://github.com/jTendermint/crypto
+- https://github.com/jTendermint/MerkleTree
+- https://github.com/jTendermint/jabci

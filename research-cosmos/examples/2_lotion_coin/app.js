@@ -1,5 +1,6 @@
-let lotion = require('lotion')
-let coin   = require('lotion-coin')
+let lotion  = require('lotion')
+let coin    = require('lotion-coin')
+// let { handler, client } = require('lotion-coin')
 
 async function main() {
   // initialize lotion-coin client
@@ -10,20 +11,25 @@ async function main() {
   let pubKey  = client.generatePublicKey(privKey)
   
   // generate address based on public key
-  let address = client.generateAddress(pubKey)
+  let address    = client.generateAddress(pubKey)
+  let addres_hex = address.toString('hex')
   
+  console.log(`My address hex ${addres_hex}`)
+
   // start our app node
   let opts = {
     port: 3000,
     initialState: {
       balances: {
-        [address.toString('hex')]: 1000
+        [addres_hex]: 1000
       },
       nonces: {}
     }
   }
-  let genesisKey = await lotion(opts)(coin.handler)
-  console.log(`My node is listening on port ${opts.port}`)
+
+  let app = lotion(opts)
+  await app.use((state, tx) => { coin.handler(state, tx) })
+  console.log(`My app node is listening on port ${opts.port}`)
 
   // send some coins to my account
   setTimeout(() => {

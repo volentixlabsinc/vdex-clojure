@@ -1,1 +1,4 @@
 node_modules/
+lotion-data/
+credentials.json
+initial-state.json

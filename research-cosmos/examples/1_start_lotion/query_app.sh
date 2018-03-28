@@ -6,6 +6,9 @@ curl http://localhost:3000/txs -d '{ "nonce": 0 }'
 echo "\n\nQuery state"
 curl http://localhost:3000/state
 
+echo "\n\nQuery info"
+#curl http://localhost:3000/info
+
 ## results
 # Query state
 # {"count":0}
