@@ -20,6 +20,10 @@ The `transaction protocol` describes what makes transactions valid, and how they
 npm install lotion
 ```
 
+## Usage
+
+- install node 8.x
+
 ## Lotion.js
 
 Lotion is a new way to create blockchain apps in JavaScript. It builds on top of Tendermint using the ABCI protocol so it can easily interoperate with other blockchains on the Cosmos Network using IBC
@@ -99,6 +103,10 @@ node app.js
 node wallet-usage.js
 ```
 
+### https://github.com/llSourcell/sirajcoin
+
+Some coin implementation with simple wallet using lotion.js and Electron 
+
 ## Interesting libraries
 
 ### Node
@@ -127,3 +135,150 @@ https://www.npmjs.com/package/tendermint
 - https://github.com/jTendermint/crypto
 - https://github.com/jTendermint/MerkleTree
 - https://github.com/jTendermint/jabci
+ 
+## Run IBC(Inter-Blockchain Communication) example on Vagrant machine
+
+```bash
+wget https://dl.google.com/go/go1.10.1.linux-amd64.tar.gz
+sudo tar -xvf go1.10.1.linux-amd64.tar.gz
+sudo mv go /usr/local
+
+echo 'export PATH=$PATH:/usr/local/go/bin:/home/vagrant/go/bin' >> /home/vagrant/.bash_profile
+echo 'export GOPATH=/home/vagrant/go' >> /home/vagrant/.bash_profile
+
+echo 'export PATH=$PATH:/usr/local/go/bin:/home/vagrant/go/bin' >> /home/vagrant/.bashrc
+echo 'export GOPATH=/home/vagrant/go' >> /home/vagrant/.bashrc
+
+mkdir -p /home/vagrant/go/bin
+mkdir -p /home/vagrant/go/src/github.com/cosmos
+//ln -s /vagrant /home/vagrant/go/src/github.com/cosmos/cosmos-sdk
+    
+# verify installation
+go version
+go env
+
+
+go get github.com/tendermint/tendermint/cmd/tendermint
+
+# verify tendermint installation
+tendermint --help
+tendermint version
+
+go get github.com/Masterminds/glide
+cd $GOPATH/src/github.com/tendermint/tendermint
+glide install
+go install ./cmd/tendermint
+
+make get_tools
+make get_vendor_deps
+make install
+
+go get -u github.com/cosmos/cosmos-sdk
+cd $GOPATH/src/github.com/cosmos/cosmos-sdk
+git pull origin master
+cd $GOPATH/src/github.com/cosmos/cosmos-sdk
+make get_tools
+make get_vendor_deps
+# build basecoind and basecli (basecoin module)
+make build
+
+# fix that sdk binaries aren't installed but only built
+# see https://github.com/cosmos/cosmos-sdk/pull/733/files
+cp $GOPATH/src/github.com/cosmos/cosmos-sdk/build/basecoind $GOPATH/bin
+cp $GOPATH/src/github.com/cosmos/cosmos-sdk/build/basecli $GOPATH/bin
+
+
+mkdir ~/.ibcdemo
+rm -rf ~/.ibcdemo/
+
+export BCHOME1_CLIENT=~/.ibcdemo/chain1/client
+export BCHOME1_SERVER=~/.ibcdemo/chain1/server
+export CHAINID1="test-chain-1"
+export PORT_PREFIX1=1234
+export RPC_PORT1=${PORT_PREFIX1}7
+alias basecli1="basecli --home $BCHOME1_CLIENT"
+alias basecoin2="basecoin --home $BCHOME2_SERVER"
+
+export BCHOME2_CLIENT=~/.ibcdemo/chain2/client
+export BCHOME2_SERVER=~/.ibcdemo/chain2/server
+export CHAINID2="test-chain-2"
+export PORT_PREFIX2=2345
+export RPC_PORT2=${PORT_PREFIX2}7
+alias basecli2="basecli --home $BCHOME2_CLIENT"
+alias basecoin1="basecoind --home $BCHOME1_SERVER"
+
+# Setup Chain 1 ================================
+basecli1 keys add money
+# us throwing-this-key-away as an pass phrase
+basecli1 keys add gotnone
+# us throwing-this-key-away as an pass phrase
+export MONEY=$(basecli1 keys get money | awk '{print $2}')
+export GOTNONE=$(basecli1 keys get gotnone | awk '{print $2}')
+
+basecoin1 init --chain-id $CHAINID1 $MONEY
+
+sed -ie "s/4665/$PORT_PREFIX1/" $BCHOME1_SERVER/config.toml
+basecoin1 start &> basecoin1.log &
+
+# Now we can attach the client to the chain and verify the state. The 
+# first account should have money, the second none:
+basecli1 init --node=tcp://localhost:${RPC_PORT1} --genesis=${BCHOME1_SERVER}/genesis.json
+basecli1 query account $MONEY
+basecli1 query account $GOTNONE
+
+# SEtup Chain 2 ================================
+basecli2 keys add moremoney
+basecli2 keys add broke
+MOREMONEY=$(basecli2 keys get moremoney | awk '{print $2}')
+BROKE=$(basecli2 keys get broke | awk '{print $2}')
+    
+basecoin2 init --chain-id $CHAINID2 $(basecli2 keys get moremoney | awk '{print $2}')
+
+sed -ie "s/4665/$PORT_PREFIX2/" $BCHOME2_SERVER/config.toml
+basecoin2 start &> basecoin2.log &
+
+# The first account should have money, the second none:
+basecli2 init --node=tcp://localhost:${RPC_PORT2} --genesis=${BCHOME2_SERVER}/genesis.json
+basecli2 query account $MOREMONEY
+basecli2 query account $BROKE
+
+# Connect these chains ==============================
+
+RELAY_KEY=$BCHOME1_SERVER/key.json
+RELAY_ADDR=$(cat $RELAY_KEY | jq .address | tr -d \")
+
+basecli1 tx send --amount=100000mycoin --sequence=1 --to=$RELAY_ADDR--name=money
+basecli1 query account $RELAY_ADDR
+
+basecli2 tx send --amount=100000mycoin --sequence=1 --to=$RELAY_ADDR --name=moremoney
+basecli2 query account $RELAY_ADDR
+
+# start the relay process.
+basecoin relay init --chain1-id=$CHAINID1 --chain2-id=$CHAINID2 \
+  --chain1-addr=tcp://localhost:${RPC_PORT1} --chain2-addr=tcp://localhost:${RPC_PORT2} \
+  --genesis1=${BCHOME1_SERVER}/genesis.json --genesis2=${BCHOME2_SERVER}/genesis.json \
+  --from=$RELAY_KEY
+
+basecoin relay start --chain1-id=$CHAINID1 --chain2-id=$CHAINID2 \
+  --chain1-addr=tcp://localhost:${RPC_PORT1} --chain2-addr=tcp://localhost:${RPC_PORT2} \
+  --from=$RELAY_KEY &> relay.log &
+
+# Sending cross-chain payments =================
+
+# Here's an empty account on test-chain-2
+basecli2 query account $BROKE
+
+# Let's send some funds from test-chain-1
+basecli1 tx send --amount=12345mycoin --sequence=2 --to=test-chain-2/$BROKE --name=money
+
+# give it time to arrive...
+sleep 2
+# now you should see 12345 coins!
+basecli2 query account $BROKE
+
+
+# ??????????
+tendermint init
+tendermint node --proxy_app=dummy  # TCP or UNIX socket address of the ABCI application
+
+```
