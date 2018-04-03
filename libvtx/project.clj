@@ -3,9 +3,19 @@
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.9.0"]
+                 ;; duct
                  [duct/core "0.6.2"]
                  [duct/module.logging "0.3.1"]
-                 #_[duct/module.web "0.6.4"]]
+                 [duct/module.sql "0.4.0"]
+                 [com.mjachimowicz/duct-migrations-auto-cfg "0.1.0"]
+                 ;; db
+                 [org.xerial/sqlite-jdbc "3.21.0.1"]
+                 [org.slf4j/slf4j-nop "1.7.25"]
+                 [org.clojure/java.jdbc "0.7.5"]
+                 [com.layerware/hugsql "0.4.8" :exclusions [org.clojure/java.jdbc]]
+                 ;; Utils
+                 [camel-snake-kebab "0.4.0"]]
+
   :plugins [[duct/lein-duct "0.10.6"]]
   :main ^:skip-aot libvtx.main
   :resource-paths ["resources" "target/resources"]

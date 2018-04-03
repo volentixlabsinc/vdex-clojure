@@ -2,7 +2,9 @@
  :duct.core/environment :production
 
  :duct.module/logging {}
- :duct.module/web {}
- 
- :duct.router/cascading
- []}
+
+ ;; automatically read migrations from folder
+ :duct-migrations-auto-cfg/module {}
+
+ ;; db connection
+ :duct.module/sql {:database-url "jdbc:sqlite:"}}
