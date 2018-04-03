@@ -1,0 +1,19 @@
+{:order
+ [[{:db/id          #db/id[:db.part/db]
+    :db/ident       :order/uuid
+    :db/unique      :db.unique/identity
+    :db/valueType   :db.type/uuid
+    :db/cardinality :db.cardinality/one
+    :db.install/_attribute :db.part/db}
+
+   {:db/id          #db/id[:db.part/db]
+    :db/ident       :order/requested-at
+    :db/valueType   :db.type/long
+    :db/cardinality :db.cardinality/one
+    :db.install/_attribute :db.part/db}
+
+   {:db/id          #db/id[:db.part/db]
+    :db/ident       :order/from
+    :db/valueType   :db.type/ref
+    :db/cardinality :db.cardinality/one
+    :db.install/_attribute :db.part/db}]]}

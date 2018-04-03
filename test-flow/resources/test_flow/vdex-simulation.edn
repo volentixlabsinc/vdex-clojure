@@ -1,0 +1,29 @@
+{:model
+ [[{:db/id     #db/id[:db.part/db]
+    :db/ident  :model.type/vdex
+    :db/doc "A generate vdex process flow and tracking responses during particular actions"}
+
+   {:db/id          #db/id[:db.part/db]
+    :db/ident       :model/users-num
+    :db/valueType   :db.type/long
+    :db/doc         "Number of users"
+    :db/cardinality :db.cardinality/one
+    :db.install/_attribute :db.part/db}
+
+   {:db/id          #db/id[:db.part/db]
+    :db/ident       :model/seconds-between-orders
+    :db/valueType   :db.type/long
+    :db/doc         "Mean time between requests in miliseconds"
+    :db/cardinality :db.cardinality/one
+    :db.install/_attribute :db.part/db}]]
+
+ :test
+ [[{:db/id    #db/id[:db.part/db]
+    :db/ident :test.type/vdex}
+
+   {:db/id    #db/id[:db.part/db]
+    :db/ident :agent.type/user}
+
+   {:db/id    #db/id[:db.part/db]
+    :db/ident :action.type/order}]]
+ }

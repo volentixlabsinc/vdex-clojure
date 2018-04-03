@@ -11,14 +11,6 @@
  {:logger #ig/ref :duct/logger
   :kafka-host #duct/env ["KAFKA_HOST" Str :or "localhost:9092"]}
 
- :matching-engine.handler/kafka-pipe
- {:logger #ig/ref :duct/logger
-  :kafka-host #duct/env ["KAFKA_HOST" Str :or "localhost:9092"]}
-
- :matching-engine.handler/kafka-pipe
- {:logger #ig/ref :duct/logger
-  :kafka-host #duct/env ["KAFKA_HOST" Str :or "localhost:9092"]}
-
  :duct.server.http/jetty
  {:port #duct/env ["MATCHING_ENGINE_PORT" Int :or 5000]
   :handler #ig/ref :matching-engine.handler/welcome
