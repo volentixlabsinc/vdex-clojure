@@ -12,7 +12,11 @@
  {:logger #ig/ref :duct/logger
   :kafka-host #duct/env ["KAFKA_HOST" Str :or "localhost:9092"]}
 
+ :duct.router/cascading
+ [#ig/ref :mempool.handler/welcome
+  #ig/ref :mempool.handler/api]
+
  :duct.server.http/jetty
  {:port #duct/env ["MEMPOOL_PORT" Int :or 5000]
-  :handler #ig/ref :mempool.handler/api
+  :handler #ig/ref :duct.core/handler
   :logger  #ig/ref :duct/logger}}

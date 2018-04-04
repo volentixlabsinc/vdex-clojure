@@ -1,0 +1,18 @@
+version: 2
+
+jobs:
+  build:
+    working_directory: ~/aggroxd
+    docker:
+      - image: circleci/clojure:lein-2.8.1
+    environment:
+      LEIN_ROOT: nbd
+      LC_ALL: C
+    steps:
+      - checkout
+      - run: cd blockchain-writer/ && lein test  
+      - run: cd libvtx/ && lein test  
+      - run: cd matching-engine/ && lein test  
+      - run: cd mempool/ && lein test  
+      - run: cd snapshot-maker/ && lein test  
+      - run: cd transaction-verification/ && lein test  
