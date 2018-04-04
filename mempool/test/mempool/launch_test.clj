@@ -5,7 +5,9 @@
    [clj-http.client :as http]
    [duct.core       :as duct]
    [duct.logger     :as logger]
-   [integrant.core  :as ig]))
+   [integrant.core  :as ig]
+   [kerodon.test :as kt]
+   [peridot.core :as p]))
 
 (duct/load-hierarchy)
 
@@ -25,3 +27,10 @@
           (is (= (:body resp) "Microservice")))
         (finally
           (ig/halt! system))))))
+
+(deftest service-test
+  (testing "get response from microservice"
+    (let [response (-> (p/session (ig/init-key :mempool.handler/welcome {}))
+                       (p/request "/")
+                       (kt/has (kt/status? 200)))]
+      (is (= (-> response :response :body) "Microservice")))))
