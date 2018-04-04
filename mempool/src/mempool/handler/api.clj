@@ -10,7 +10,7 @@
   [_ config]
   (routes
     (->
-      (POST "/order" {:keys [body] :as request}
-            (kafka-producer/produce-message config (:key body) (:msg body))
+      (POST "/order" {:keys [body-params] :as request}
+            (kafka-producer/produce-message config (:key body-params) (:msg body-params))
             {:status 201})
       (wrap-json-body {:keywords? true :bigdecimals? true}))))
