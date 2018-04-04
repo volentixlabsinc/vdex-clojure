@@ -38,6 +38,8 @@
 
 ;; === tokens ======================
 (comment
+
+  ;; display all tables in db - check if all tables from migrations were created
   (all-db-tables)
 
   (token/get-all (db-spec))
