@@ -9,12 +9,48 @@
  and provide an issue ID in a commit message prefixed by `#`
 
 
-## Prerequisites
+## Prerequisites (you need to install)
 
 * [Java](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+```bash
+# you should be able to run this in command line
+java -version
+
+# result
+# java version "1.8.0_144"
+# Java(TM) SE Runtime Environment (build 1.8.0_144-b01)
+# Java HotSpot(TM) 64-Bit Server VM (build 25.144-b01, mixed mode)
+```
 * [Leiningen](https://leiningen.org/)
+```bash
+# you should be able to run this in command line
+lein -v
+
+# result
+# Leiningen 2.8.1 on Java 1.8.0_144 Java HotSpot(TM) 64-Bit Server VM
+```
 * [Docker compose](https://docs.docker.com/compose/install/)
 
+Whole project is developed in Clojure.
+
+## Project structure
+
+Project contains microservices as an base for further development:
+
+- `blockchain-writer`
+- `matching-engine`
+- `mempool`
+- `snapshot-maker`
+- `transaction-verification`
+
+3 microservices are connected using `Kafka`:
+
+`mempool` -> kafka `orderflow` topic -> `matching-engine`
+                                     -> `blockchain-writer`
+
+as an example of using `Kafka` to send data between microservices.
+
+Each microservice folder contains information how to run microservice for development purpouse.
 
 ## Running microservices ##
 
@@ -38,9 +74,11 @@ docker-compose up -d --build
 
 this command takes several minutes to complete.
 
-## Performance testing (example)
+## Performance testing (research results)
 
-In tab 1  
+As an result of performance testing research we can run simple benchmark example. It will fire 50 requests to hit one services and it will produce some report.
+
+In tab 1
 ```bash
 # start matching engine service in one tab
 # for instance
@@ -91,7 +129,9 @@ Simulation Microservice ping simulation finished.
 
 Open report file generated after test finish (you will get file url in command line).
 
-## Simulation testing
+## Simulation testing (research results)
+
+As an result of simulation testing research you can run some simulation test example. It will simulate 100 users hitting one service. It's very basic idea that will be for us when add more stuff to the project.
 
 In tab 1  
 ```bash
