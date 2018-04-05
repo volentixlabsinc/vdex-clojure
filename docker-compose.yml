@@ -42,6 +42,13 @@ services:
     volumes:
      - ./transaction-verification:/code
 
+  libvtx:
+    build: ./libvtx
+    ports:
+     - "5005:5000"
+    volumes:
+     - ./libvtx:/code
+
   zookeeper:
     build: ./kafka
     command: zookeeper

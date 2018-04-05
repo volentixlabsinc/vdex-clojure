@@ -42,6 +42,7 @@ Project contains microservices as an base for further development:
 - `mempool`
 - `snapshot-maker`
 - `transaction-verification`
+- `libVTX`
 
 3 microservices are connected using `Kafka`:
 
@@ -73,6 +74,15 @@ docker-compose up -d --build
 ```
 
 this command takes several minutes to complete.
+
+You can find services running on following ports:
+
+- blockchain-writer `http://localhost:5000`
+- matching-engine`http://localhost:5001`
+- mempool`http://localhost:5002`
+- snapshot-maker`http://localhost:5003`
+- transaction-verification`http://localhost:5004`
+- libVTX `http://localhost:5005`
 
 ## Performance testing (research results)
 
