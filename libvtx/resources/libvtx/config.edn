@@ -12,7 +12,8 @@
 
  :libvtx.handler/api
  {:logger #ig/ref :duct/logger
-  :db #ig/ref :duct.database/sql}
+  :db #ig/ref :duct.database/sql
+  :test-database-url "jdbc:sqlite::test"}
 
  :duct.router/cascading
  [#ig/ref :libvtx.handler/api]

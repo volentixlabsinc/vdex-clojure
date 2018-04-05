@@ -1,11 +1,19 @@
 (ns libvtx.common
   (:require
+    [clojure.data.json :as json]
     [duct.logger :refer [log]]))
 
 
 (defn ->db-spec
   [conf]
   (-> conf :db :spec))
+
+
+(defn str->kwjson
+  [string]
+  (some-> string
+          str
+          (json/read-str :key-fn keyword)))
 
 
 (defmacro with-try

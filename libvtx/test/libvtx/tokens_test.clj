@@ -1,38 +1,17 @@
 (ns libvtx.tokens-test
   (:require
    [clojure.test :refer :all]
-   [clojure.java.io   :as io]
-   [clojure.java.jdbc :as jdbc]
-   [duct.core         :as duct]
-   [duct.logger       :as logger]
-   [integrant.core    :as ig]
-   [fipp.edn :refer [pprint]]
+   [libvtx.common :refer [->db-spec]]
+   [libvtx.conf.test-db :refer [create-connection! with-test-db *conf*]]
    [libvtx.token :as token]))
 
-(duct/load-hierarchy)
 
-(defrecord TestLogger []
-  logger/Logger
-  (-log [_ level ns-str file line id event data]))
+(use-fixtures :once create-connection!)
+(use-fixtures :each with-test-db)
 
-;; fake logger initialization
-;; we don't need whole logger subsystem
-(defmethod ig/init-key :duct/logger [_ config] (->TestLogger))
-
-(defn system []
-  (-> "libvtx/config.edn"
-      io/resource
-      duct/read-config
-      duct/prep
-      ig/init))
-
-(defn ->db-spec [system]
-  (-> system :duct.database.sql/hikaricp :spec))
 
 (deftest tokens-test
-  (let [sys (system)
-        db-spec (->db-spec sys)
+  (let [db-spec (->db-spec *conf*)
         address (token/create db-spec "ETH")]
     (is (= address
-           (:address (token/get db-spec address))))
-    (ig/halt! sys)))
+           (:address (token/get db-spec address))))))
