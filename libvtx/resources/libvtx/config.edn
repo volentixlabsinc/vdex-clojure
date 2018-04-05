@@ -2,9 +2,21 @@
  :duct.core/environment :production
 
  :duct.module/logging {}
+ :duct.module.web/api {}
 
  ;; automatically read migrations from folder
  :duct-migrations-auto-cfg/module {}
 
  ;; db connection
- :duct.module/sql {:database-url "jdbc:sqlite:"}}
+ :duct.module/sql {:database-url "jdbc:sqlite:"}
+
+ :libvtx.handler/api
+ {:logger #ig/ref :duct/logger}
+
+ :duct.router/cascading
+ [#ig/ref :libvtx.handler/api]
+
+ :duct.server.http/jetty
+ {:port #duct/env ["LIBVTX_PORT" Int :or 5000]
+  :handler #ig/ref :duct.core/handler
+  :logger  #ig/ref :duct/logger}}

@@ -7,7 +7,10 @@
                  [duct/core "0.6.2"]
                  [duct/module.logging "0.3.1"]
                  [duct/module.sql "0.4.0"]
+                 [duct/module.web "0.6.4"]
                  [com.mjachimowicz/duct-migrations-auto-cfg "0.1.0"]
+                 ;; ring
+                 [ring/ring-json "0.4.0"]
                  ;; db
                  [org.xerial/sqlite-jdbc "3.21.0.1"]
                  [org.slf4j/slf4j-nop "1.7.25"]

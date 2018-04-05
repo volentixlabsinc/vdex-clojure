@@ -16,3 +16,4 @@ jobs:
       - run: cd mempool/ && lein test  
       - run: cd snapshot-maker/ && lein test  
       - run: cd transaction-verification/ && lein test  
+      - run: cd libvtx/ && lein test  
