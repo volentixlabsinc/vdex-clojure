@@ -17,6 +17,8 @@
                  [org.clojure/java.jdbc "0.7.5"]
                  [com.layerware/hugsql "0.4.8" :exclusions [org.clojure/java.jdbc]]
                  ;; Utils
+                 [rop "0.2.1"]
+                 [bouncer "1.0.1"]
                  [camel-snake-kebab "0.4.0"]]
 
   :plugins [[duct/lein-duct "0.10.6"]]

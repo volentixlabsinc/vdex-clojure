@@ -11,7 +11,8 @@
  :duct.module/sql {:database-url "jdbc:sqlite:"}
 
  :libvtx.handler/api
- {:logger #ig/ref :duct/logger}
+ {:logger #ig/ref :duct/logger
+  :db #ig/ref :duct.database/sql}
 
  :duct.router/cascading
  [#ig/ref :libvtx.handler/api]

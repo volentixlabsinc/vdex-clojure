@@ -1,7 +1,7 @@
 (ns libvtx.token
 (:require 
    [libvtx.crypto :as crypto]
-   [libvtx.db :as db]))
+   [libvtx.db.db :as db]))
 
 (defn get-all [db-spec]
   (db/get-tokens db-spec))

@@ -1,13 +1,13 @@
-(ns libvtx.db
+(ns libvtx.db.db
   (:require
    [clojure.java.jdbc :as jdbc]
    [hugsql.core :as hugsql]
    [libvtx.hugsql.kebab-adapter :as adapter]))
 
 
-(hugsql/def-db-fns "libvtx/db.sql" {:quoting :ansi
+(hugsql/def-db-fns "libvtx/db/db.sql" {:quoting :ansi
                                     :adapter (adapter/kebab-adapter)})
-(hugsql/def-sqlvec-fns "libvtx/db.sql" {:quoting :ansi
+(hugsql/def-sqlvec-fns "libvtx/db/db.sql" {:quoting :ansi
                                         :adapter (adapter/kebab-adapter)})
 
 
