@@ -2,7 +2,7 @@
 select * from tokens
 
 -- :name create-token :! :n
-insert into tokens (address, name, precision) values (:address, :name, 18)
+insert into tokens (address, name, precision) values (:address, :name, :precision)
 
 -- :name get-token :? :1
 select * from tokens t where t.address = :address
@@ -33,3 +33,9 @@ insert into balances (address, token_address, balance) values (:address,
 
 -- :name update-balance :!
 update balances set balance = :balance where address = :address and token_address = :token-address 
+
+-- :name create-pair :!
+insert into pairs (p1, p2, name) values (:address, :pair, :pair-name)
+
+-- :name get-pair-name :? :1
+select name from pairs where p1 = :address and p2 = :pair-address

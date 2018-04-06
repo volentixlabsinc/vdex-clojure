@@ -7,6 +7,7 @@
     [ring.middleware.params :refer [wrap-params]]
     [libvtx.balance :refer [read-or-create-balance]]
     [libvtx.common :refer [with-try]]
+    [libvtx.token :refer [create-token]]
     [libvtx.transaction :refer [send-transaction receive-transactions]]))
 
 
@@ -31,11 +32,20 @@
          conf)))
 
 
+(defn- token-routes
+  [conf]
+  (POST "/token" [:as request]
+        (with-try
+          (create-token request conf)
+          conf)))
+
+
 (defmethod ig/init-key :libvtx.handler/api
   [_ conf]
   (-> (routes
         (transaction-routes conf)
-        (balance-routes conf))
+        (balance-routes conf)
+        (token-routes conf))
       wrap-keyword-params
       wrap-params
       (wrap-json-body {:keywords? true :bigdecimals? true})

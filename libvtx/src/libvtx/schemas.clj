@@ -12,3 +12,9 @@
 
 (def receive-schema
   {:address [validators/required]})
+
+
+(def token-schema
+  {:address [validators/required]
+   :name [validators/required]
+   :precision [validators/required] })
