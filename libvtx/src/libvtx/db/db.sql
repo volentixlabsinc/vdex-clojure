@@ -21,3 +21,15 @@ select * from transactions where from_address = :from-address and to_address = :
 select * from transactions where to_address = :address
 --~ (when (contains? params :token-address) " and token_address = :token-address")
 order by created_at
+
+-- :name get-balance-by-address
+select * from balances where address = :address
+--~ (when (contains? params :token-address) " and token_address = :token-address")
+
+-- :name create-balance :!
+insert into balances (address, token_address, balance) values (:address, 
+--~ (if (:token-address params) ":token-address, " "null, ") 	
+:balance)
+
+-- :name update-balance :!
+update balances set balance = :balance where address = :address and token_address = :token-address 

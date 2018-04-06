@@ -1,18 +1,9 @@
 (ns libvtx.transaction
   (:require
-    [bouncer.core :as bouncer]
     [rop.core :as rop]
-    [libvtx.common :refer [->db-spec]]
+    [libvtx.common :refer [validate-params ->db-spec]]
     [libvtx.db.db :as db]
     [libvtx.schemas :refer [transaction-schema receive-schema]]))
-
-
-(defn- validate-params
-  [result schema]
-  (let [[errors _] (bouncer/validate (:params result) schema)]
-    (if (empty? errors)
-      (rop/succeed result)
-      (rop/fail {:body {:errors errors} :status 400}))))
 
 
 (defn- =validate-send-params=

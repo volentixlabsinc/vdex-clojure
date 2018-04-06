@@ -1,7 +1,9 @@
 (ns libvtx.common
   (:require
     [clojure.data.json :as json]
-    [duct.logger :refer [log]]))
+    [bouncer.core :as bouncer]
+    [duct.logger :refer [log]]
+    [rop.core :as rop]))
 
 
 (defn ->db-spec
@@ -24,7 +26,16 @@
     (try
       ~fn-call
       (catch Exception ~'e
+        (println ~'e)
         (log (:logger ~conf) :error ~'e)
         {:headers {"Content-Type" "text/html"}
          :body "Internal server error."
          :status 500}))))
+
+
+(defn validate-params
+  [result schema]
+  (let [[errors _] (bouncer/validate (:params result) schema)]
+    (if (empty? errors)
+      (rop/succeed result)
+      (rop/fail {:body {:errors errors} :status 400}))))
