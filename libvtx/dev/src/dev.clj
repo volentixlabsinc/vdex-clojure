@@ -12,7 +12,7 @@
             [integrant.repl.state :refer [config system]]
             [libvtx.crypto :as crypto]
             [libvtx.token :as token]
-            [libvtx.db :as db]))
+            [libvtx.db.db :as db]))
 
 (duct/load-hierarchy)
 
