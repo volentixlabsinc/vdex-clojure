@@ -5,6 +5,7 @@
     [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
     [ring.middleware.keyword-params :refer [wrap-keyword-params]]
     [ring.middleware.params :refer [wrap-params]]
+    [libvtx.balance :refer [read-or-create-balance]]
     [libvtx.common :refer [with-try]]
     [libvtx.transaction :refer [send-transaction receive-transactions]]))
 
@@ -22,12 +23,20 @@
                   conf))))
 
 
+(defn- balance-routes
+  [conf]
+  (GET "/balance" [:as request]
+       (with-try
+         (read-or-create-balance request conf)
+         conf)))
+
+
 (defmethod ig/init-key :libvtx.handler/api
   [_ conf]
-  (routes
-    (->
-      (transaction-routes conf)
+  (-> (routes
+        (transaction-routes conf)
+        (balance-routes conf))
       wrap-keyword-params
       wrap-params
       (wrap-json-body {:keywords? true :bigdecimals? true})
-      wrap-json-response)))
+      wrap-json-response))

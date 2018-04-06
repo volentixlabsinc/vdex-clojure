@@ -1,6 +1,5 @@
 (ns libvtx.transactions-test
   (:require
-    [clojure.data.json :as json]
     [clojure.test :refer [deftest testing is use-fixtures]]
     [integrant.core  :as ig]
     [kerodon.test :as kt]
