@@ -13,3 +13,10 @@
 
 (defn get-tables [db-spec]
   (jdbc/query db-spec ["SELECT name FROM sqlite_master WHERE type='table'"]))
+
+
+(defn get-mempool-transactions
+  [db-spec mempool-interval]
+  (jdbc/query db-spec
+              [(str "select * from transactions where mempool = 1 "
+                    (format "and created_at < datetime('now', '-%d minutes')" mempool-interval))]))

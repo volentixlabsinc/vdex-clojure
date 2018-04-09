@@ -10,8 +10,10 @@ select * from tokens t where t.address = :address
 -- :name create-transaction :!
 insert into transactions (from_address, to_address, amount, token_address
 --~ (when (contains? params :message) ", message")
+--~ (when (contains? params :created-at) ", created_at")
 ) values (:from-address, :to-address, :amount, :token-address
 --~ (when (contains? params :message) ", :message")
+--~ (when (contains? params :created-at) ", :created-at")
 )
 
 -- :name get-transaction-by-params :? :1
@@ -21,6 +23,9 @@ select * from transactions where from_address = :from-address and to_address = :
 select * from transactions where to_address = :address
 --~ (when (contains? params :token-address) " and token_address = :token-address")
 order by created_at
+
+-- :name remove-transaction-from-mempool :!
+update transactions set mempool = 0, confirmed_at = current_timestamp where id = :id
 
 -- :name get-balance-by-address
 select * from balances where address = :address

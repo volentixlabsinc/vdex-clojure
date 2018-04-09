@@ -19,7 +19,9 @@
                  ;; Utils
                  [rop "0.2.1"]
                  [bouncer "1.0.1"]
-                 [camel-snake-kebab "0.4.0"]]
+                 [camel-snake-kebab "0.4.0"]
+                 ;; scheduler
+                 [tick "0.3.3"]]
 
   :plugins [[duct/lein-duct "0.10.6"]]
   :main ^:skip-aot libvtx.main
