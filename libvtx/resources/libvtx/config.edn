@@ -13,7 +13,8 @@
  :libvtx.handler/api
  {:logger #ig/ref :duct/logger
   :db #ig/ref :duct.database/sql
-  :test-database-url "jdbc:sqlite:libvtx.test.sqlite"}
+  :test-database-url "jdbc:sqlite:libvtx.test.sqlite"
+  :block-time #duct/env ["LIBVTX_BLOCK_TIME" Itn :or 120]}
 
  :libvtx/scheduler
  {:logger #ig/ref :duct/logger

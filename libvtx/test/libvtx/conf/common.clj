@@ -10,4 +10,5 @@
 
 (def api-config
   {:environment :testing
+   :block-time 1
    :logger (->NoOpLogger)})

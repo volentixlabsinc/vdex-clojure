@@ -18,3 +18,7 @@
   {:address [validators/required]
    :name [validators/required]
    :precision [validators/required] })
+
+
+(def transaction-confirmation-schema
+  {:id [validators/required]})

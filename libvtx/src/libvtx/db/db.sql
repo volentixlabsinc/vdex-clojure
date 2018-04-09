@@ -27,6 +27,9 @@ order by created_at
 -- :name remove-transaction-from-mempool :!
 update transactions set mempool = 0, confirmed_at = current_timestamp where id = :id
 
+-- :name get-transaction-by-id :? :!
+select * from transactions where id = :id
+
 -- :name get-balance-by-address
 select * from balances where address = :address
 --~ (when (contains? params :token-address) " and token_address = :token-address")

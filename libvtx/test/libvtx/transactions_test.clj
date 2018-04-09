@@ -24,7 +24,7 @@
 
 
 (deftest transactions-test
-  (let [conf (merge api-config *conf*)]
+  (let [conf (merge *conf* api-config)]
     (testing "should create and return new transaction"
       (let [response (-> (p/session (ig/init-key :libvtx.handler/api conf))
                          (p/request "/transactions/send" 
@@ -51,7 +51,7 @@
                                     :params {:address (:to-address transaction)})
                          (kt/has (kt/status? 200)))]
         (is (= 2 (-> response :response :body str->kwjson count)))))
-    
+
     (testing "should return only 1 transaction filtered by token address"
       (let [response (-> (p/session (ig/init-key :libvtx.handler/api conf))
                          (p/request "/transactions/receive" 
@@ -64,7 +64,7 @@
       (let [response (-> (p/session (ig/init-key :libvtx.handler/api conf))
                          (p/request "/transactions/receive")
                          (kt/has (kt/status? 400)))]))
-    
+
     (testing "should transfer balance and remove transaction from mempool"
       (let [_ (db/create-balance (->db-spec conf) {:address "address1" 
                                                    :token-address "taddress" 
@@ -88,7 +88,7 @@
         (is (= "10" (-> balance2 first :balance)))
         (is (-> transaction first :confirmed-at nil? not))
         (is (= 0 (-> transaction first :mempool)))))
-    
+
     (testing "should remove transaction from mempool and not transfer balance, insufficient amount"
       (let [_ (db/create-transaction (->db-spec conf) {:from-address "address1"
                                                        :to-address "address2"
@@ -105,4 +105,36 @@
         (is (= "5" (-> balance1 first :balance)))
         (is (= "10" (-> balance2 first :balance)))
         (is (-> transaction first :confirmed-at nil? not))
-        (is (= 0 (-> transaction first :mempool)))))))
+        (is (= 0 (-> transaction first :mempool)))))
+
+    (testing "should return 0 confirmations - transaction not confirmed"
+      (let [_ (db/create-transaction (->db-spec conf) {:from-address "address1"
+                                                       :to-address "address2"
+                                                       :amount "1"
+                                                       :token-address "taddress"
+                                                       :created-at "2007-01-01 10:00:00"})
+            transactions (db/get-transactions-by-address (->db-spec conf) {:address "address2"
+                                                                           :token-address "taddress"})
+            transaction-id (->> transactions (filter #(= "1" (:amount %))) first :id)
+            response (-> (p/session (ig/init-key :libvtx.handler/api conf))
+                         (p/request "/transactions/confirmations" 
+                                    :params {:id transaction-id})
+                         (kt/has (kt/status? 200)))]
+        (is (= 0 (-> response :response :body str->kwjson :transaction-confirmations)))))
+
+    (testing "should return some confirmations"
+      (let [_ (mempool-transaction conf 0 nil) 
+            transactions (db/get-transactions-by-address (->db-spec conf) {:address "address2"
+                                                                           :token-address "taddress"})
+            transaction-id (->> transactions (filter #(= "1" (:amount %))) first :id)
+            _ (Thread/sleep 1000)
+            response (-> (p/session (ig/init-key :libvtx.handler/api conf))
+                         (p/request "/transactions/confirmations" 
+                                    :params {:id transaction-id})
+                         (kt/has (kt/status? 200)))]
+        (is (< 0 (-> response :response :body str->kwjson :transaction-confirmations)))))
+
+    (testing "should return 400 - missing transaction id"
+      (let [response (-> (p/session (ig/init-key :libvtx.handler/api conf))
+                         (p/request "/transactions/confirmations")
+                         (kt/has (kt/status? 400)))]))))
