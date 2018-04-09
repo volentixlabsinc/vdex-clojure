@@ -8,12 +8,12 @@
  :duct-migrations-auto-cfg/module {}
 
  ;; db connection
- :duct.module/sql {:database-url "jdbc:sqlite:"}
+ :duct.module/sql {:database-url "jdbc:sqlite:libvtx.sqlite"}
 
  :libvtx.handler/api
  {:logger #ig/ref :duct/logger
   :db #ig/ref :duct.database/sql
-  :test-database-url "jdbc:sqlite::test"}
+  :test-database-url "jdbc:sqlite:libvtx.test.sqlite"}
 
  :duct.router/cascading
  [#ig/ref :libvtx.handler/api]
