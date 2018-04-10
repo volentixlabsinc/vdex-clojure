@@ -8,7 +8,7 @@
     [libvtx.balance :refer [read-or-create-balance]]
     [libvtx.common :refer [with-try]]
     [libvtx.token :refer [create-token]]
-    [libvtx.transaction :refer [send-transaction receive-transactions]]))
+    [libvtx.transaction :refer [send-transaction receive-transactions transaction-confirmations]]))
 
 
 (defn- transaction-routes
@@ -21,6 +21,10 @@
            (GET "/receive" [:as request]
                 (with-try
                   (receive-transactions request conf)
+                  conf))
+           (GET "/confirmations" [:as request]
+                (with-try
+                  (transaction-confirmations request conf)
                   conf))))
 
 

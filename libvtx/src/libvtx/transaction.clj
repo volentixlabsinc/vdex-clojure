@@ -1,11 +1,13 @@
 (ns libvtx.transaction
   (:require
     [clojure.string :refer [trim]]
+    [clj-time.core :as time]
+    [clj-time.format :as time-format]
     [rop.core :as rop]
     [libvtx.balance :refer [read-or-create-balance]]
     [libvtx.common :refer [validate-params ->db-spec]]
     [libvtx.db.db :as db]
-    [libvtx.schemas :refer [transaction-schema receive-schema]]))
+    [libvtx.schemas :refer [transaction-confirmation-schema transaction-schema receive-schema]]))
 
 
 (defn- =validate-send-params=
@@ -77,3 +79,30 @@
         (when (>= from-amount transaction-amount)
           (update-balances conf from-balance to-balance from-amount to-amount transaction-amount))
         (db/remove-transaction-from-mempool (->db-spec conf) transaction)))))
+
+
+(defn- =validate-confirmations-params=
+  [result]
+  (validate-params result transaction-confirmation-schema))
+
+
+(defn- =get-transaction-confirmations=
+  [{:keys [params conf] :as result}]
+  (let [confirmed-at (-> conf ->db-spec (db/get-transaction-by-id  params) first :confirmed-at)]
+    (if confirmed-at
+      (let [time-formatter (time-format/formatter "yyyy-MM-dd HH:mm:ss")
+            parsed-confirmed-at (time-format/parse time-formatter confirmed-at)
+            elapsed-seconds (time/in-seconds (time/interval parsed-confirmed-at (time/now)))
+            confirmations (->> conf :block-time (/ elapsed-seconds) Math/floor int)]
+        (assoc result :transaction-confirmations {:transaction-confirmations confirmations}))
+      (assoc result :transaction-confirmations {:transaction-confirmations 0}))))
+
+
+(defn transaction-confirmations
+  [request conf]
+  (rop/>>=*
+    :transaction-confirmations
+    {:params (:params request)
+     :conf conf}
+    =validate-confirmations-params=
+    (rop/switch =get-transaction-confirmations=)))
