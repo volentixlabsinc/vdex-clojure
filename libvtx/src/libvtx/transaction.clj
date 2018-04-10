@@ -1,6 +1,8 @@
 (ns libvtx.transaction
   (:require
+    [clojure.string :refer [trim]]
     [rop.core :as rop]
+    [libvtx.balance :refer [read-or-create-balance]]
     [libvtx.common :refer [validate-params ->db-spec]]
     [libvtx.db.db :as db]
     [libvtx.schemas :refer [transaction-schema receive-schema]]))
@@ -49,3 +51,29 @@
      :conf conf}
     =validate-receive-params=
     (rop/switch =get-transactions=)))
+
+
+(defn- update-balances
+  [conf from-balance to-balance from-amount to-amount transaction-amount]
+  (let [final-to-amount (str (+ to-amount transaction-amount))
+        final-from-amount (str (- from-amount transaction-amount))]
+    (db/update-balance (->db-spec conf) (assoc from-balance :balance final-from-amount))
+    (db/update-balance (->db-spec conf) (assoc to-balance :balance final-to-amount))))
+
+
+(defn mempool-transaction
+  [conf mempool-interval _]
+  (let [mempool-transactions (db/get-mempool-transactions (->db-spec conf) mempool-interval)]
+    (doseq [transaction mempool-transactions]
+      (let [from-balance (:body (read-or-create-balance {:params {:address (:from_address transaction)
+                                                                  :token-address (:token_address transaction)}} 
+                                                        conf))
+            to-balance (:body (read-or-create-balance {:params {:address (:to_address transaction)
+                                                                :token-address (:token_address transaction)}} 
+                                                      conf))
+            to-amount (-> to-balance :balance trim bigdec)
+            from-amount (-> from-balance :balance trim bigdec)
+            transaction-amount (-> transaction :amount trim bigdec)]
+        (when (>= from-amount transaction-amount)
+          (update-balances conf from-balance to-balance from-amount to-amount transaction-amount))
+        (db/remove-transaction-from-mempool (->db-spec conf) transaction)))))

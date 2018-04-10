@@ -15,6 +15,11 @@
   :db #ig/ref :duct.database/sql
   :test-database-url "jdbc:sqlite:libvtx.test.sqlite"}
 
+ :libvtx/scheduler
+ {:logger #ig/ref :duct/logger
+  :db #ig/ref :duct.database/sql
+  :mempool-interval #duct/env ["MEMPOOL_INTERVAL" Int :or 5]}
+
  :duct.router/cascading
  [#ig/ref :libvtx.handler/api]
 
