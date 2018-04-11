@@ -33,9 +33,9 @@
          :status 500}))))
 
 
-(defn validate-params
-  [result schema]
+(defn =validate-params=
+  [schema result]
   (let [[errors _] (bouncer/validate (:params result) schema)]
     (if (empty? errors)
       (rop/succeed result)
-      (rop/fail {:body {:errors errors} :status 400}))))
+      (rop/fail {:errors errors}))))

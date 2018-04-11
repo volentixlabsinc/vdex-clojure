@@ -21,4 +21,4 @@
 
 
 (def transaction-confirmation-schema
-  {:id [validators/required]})
+  {:transaction-id [validators/required]})

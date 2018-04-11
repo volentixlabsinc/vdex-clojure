@@ -1,44 +1,36 @@
 (ns libvtx.token
   (:require
     [rop.core :as rop]
-    [libvtx.common :refer [validate-params ->db-spec]]
+    [libvtx.common :refer [=validate-params= ->db-spec]]
     [libvtx.db.db :as db]
     [libvtx.schemas :refer [token-schema]]))
 
 
-(defn- =validate-token-params=
-  [result]
-  (validate-params result token-schema))
-
-
 (defn- =create-token=
-  [{:keys [params conf] :as result}]
-  (db/create-token (->db-spec conf) params)
-  (-> result
-      (assoc :token params)
-      (assoc-in [:response :status] 201)))
+  [{:keys [params db-spec] :as result}]
+  (db/create-token db-spec params))
 
 
 (defn- get-token-name
-  [address conf]
-  (-> conf ->db-spec (db/get-token {:address address}) :name))
+  [address db-spec]
+  (-> db-spec (db/get-token {:address address}) :name))
 
 
 (defn- =create-pairs=
-  [{:keys [params conf] :as result}]
+  [{:keys [params db-spec] :as result}]
   (doseq [pair (:pairs-with params)]
-    (let [pair-token-name (get-token-name pair conf)]
-      (db/create-pair (->db-spec conf) {:address (:address params)
+    (let [pair-token-name (get-token-name pair db-spec)]
+      (db/create-pair db-spec {:address (:address params)
                                         :pair pair
-                                        :pair-name (->> [(:name params) pair-token-name] sort (apply str))}))))
+                                        :pair-name (->> [(:name params) pair-token-name] sort (apply str))})))
+  params)
 
 
 (defn create-token
-  [request conf]
-  (rop/>>=*
-    :token
-    {:params (:body-params request)
-     :conf conf}
-    =validate-token-params=
-    (rop/switch =create-token=)
-    (rop/dead =create-pairs=)))
+  [db-spec token]
+  (rop/>>=
+    {:params token
+     :db-spec db-spec}
+    (partial =validate-params= token-schema)
+    (rop/dead =create-token=)
+    (rop/switch =create-pairs=)))

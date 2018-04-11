@@ -28,7 +28,7 @@ order by created_at
 update transactions set mempool = 0, confirmed_at = current_timestamp where id = :id
 
 -- :name get-transaction-by-id :? :!
-select * from transactions where id = :id
+select * from transactions where id = :transaction-id
 
 -- :name get-balance-by-address
 select * from balances where address = :address
