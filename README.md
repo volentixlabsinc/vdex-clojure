@@ -53,6 +53,122 @@ as an example of using `Kafka` to send data between microservices.
 
 Each microservice folder contains information how to run microservice for development purpouse.
 
+## Microservices
+
+### Blockchain writer
+
+Writes confirmed transaction into the blockchain.
+To verify that it's running, execute
+
+```bash
+curl http://localhost:5000
+```
+
+Result should be a status 200 response.
+
+### Matching engine
+
+Matches ask and bid orders, creates transactions and manages desposits and withdrawals.
+To verify that it's running, execute
+
+```bash
+curl http://localhost:5001
+```
+
+Result should be a status 200 response.
+
+### Mempool
+
+Stores transactions until they are verified.
+To verify that it's running, execute
+
+```bash
+curl http://localhost:5002
+```
+
+Result should be a status 200 response.
+
+Mempool now contains API for Kafka testing. To see the flow when system is running, execute 
+
+```bash
+curl -d '{"key":"42", "msg":"foobar"}' -H "Content-Type: application/json" -X POST http://localhost:5002/order
+```
+
+### Snapshot maker
+
+Saves transaction snapshots to disk for later usage.
+To verify that it's running, execute
+
+```bash
+curl http://localhost:5003
+```
+
+Result should be a status 200 response.
+
+### Transaction verification
+
+Verifies transactions.
+To verify that it's running, execute
+
+```bash
+curl http://localhost:5004
+```
+
+Result should be a status 200 response.
+
+### libVTX
+
+Library for working with transactions, balances, deposits and tokens. It will provide API for transaction signing at later stages of development.
+
+To verify it's running, execute
+
+```bash
+curl http://localhost:5005
+```
+
+Result should be a status 200 response.
+
+#### Usage
+
+##### Transaction
+
+```clojure
+(require '[libvtx.transaction :as transaction])
+```
+
+`send-transaction` creates a transaction. It takes 2 parameters - db spec and a map with transaction data and returns newly created transaction.
+
+```clojure
+(def test-transaction {:from-address "from-address" 
+                       :to-address "to-address" 
+                       :amount "10" 
+                       :token-address "token-address"
+                       :message "message"})
+
+(transaction/send-transaction db-spec test-transaction)
+```
+
+Message key-value pair is not mandatory.
+
+`receive-transactions` takes 3 parameters - db spec, address and token address (not mandatory) and returns list of transactions filtered by to-address and token address (not mandatory) ordered by creation timestamp.
+
+```clojure
+(transaction/receive-transaction db-spec "to-address" "token-address")
+```
+
+`mempool-transaction` takes 3 parameters - db spec, interval in which to check for new transactions and third parameter shouldn't be used directly, it's used by scheduler that runs this function periodically. The function transfers balance and removes transaction from mempool. It' supposed to run each 5 minutes (configurable) when you run libVTX service.
+For testing purposes, pass `0` as interval and the function will process all unprocessed entries immediately.
+
+```clojure
+(transaction/mempool-transaction db-spec 0 nil)
+```
+
+`transaction-confirmations` takes 2 or 3 parameters - db spec, transaction id and block time which defaults to 120 seconds if not provided. The function simulates getting confirmations from gateways. For testing purposes, use block time `1` or some other small number so you don't have to wait too long before confirmations start to add up.
+
+```clojure
+(transaction/transaction-confirmations db-spec transaction-id 1) 
+```
+
 ## Running microservices ##
 
 To run the microservices and Kafka node, run following command from root directory of the repo:
