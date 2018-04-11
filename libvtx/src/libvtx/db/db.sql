@@ -47,3 +47,9 @@ insert into pairs (p1, p2, name) values (:address, :pair, :pair-name)
 
 -- :name get-pair-name :? :1
 select name from pairs where p1 = :address and p2 = :pair-address
+
+-- :name create-deposit-address :!
+insert into deposits (address, token_address, receiver_address) values (:address, :token-address, :receiver-address)
+
+-- :name get-deposit-by-address :? :1
+select * from deposits where address = :address

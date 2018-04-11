@@ -22,3 +22,12 @@
 
 (def transaction-confirmation-schema
   {:transaction-id [validators/required]})
+
+
+(def check-deposit-schema
+  {:address [validators/required]
+   :token-address [validators/required]})
+
+
+(def deposit-schema
+  (merge check-deposit-schema {:receiver-address [validators/required]}))

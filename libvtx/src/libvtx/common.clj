@@ -1,6 +1,7 @@
 (ns libvtx.common
   (:require
     [clojure.data.json :as json]
+    [clojure.string :refer [join]]
     [bouncer.core :as bouncer]
     [duct.logger :refer [log]]
     [rop.core :as rop]))
@@ -39,3 +40,9 @@
     (if (empty? errors)
       (rop/succeed result)
       (rop/fail {:errors errors}))))
+
+
+(defn random-string
+  [length]
+  (let [ascii-codes (concat (range 48 58) (range 66 91) (range 97 123))]
+    (join (repeatedly length #(char (rand-nth ascii-codes))))))
