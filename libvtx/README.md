@@ -1,6 +1,5 @@
 # libvtx
 
-FIXME: description
 
 ## Developing
 
