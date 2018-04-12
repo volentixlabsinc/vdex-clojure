@@ -175,47 +175,6 @@ curl http://localhost:5005
 
 Result should be a status 200 response.
 
-### Usage
-
-#### Transaction
-
-```clojure
-(require '[libvtx.transaction :as transaction])
-```
-
-`send-transaction` creates a transaction. It takes 2 parameters - db spec and a map with transaction data and returns newly created transaction.
-
-```clojure
-(def test-transaction {:from-address "from-address" 
-                       :to-address "to-address" 
-                       :amount "10" 
-                       :token-address "token-address"
-                       :message "message"})
-
-(transaction/send-transaction db-spec test-transaction)
-```
-
-Message key-value pair is not mandatory.
-
-`receive-transactions` takes 3 parameters - db spec, address and token address (not mandatory) and returns list of transactions filtered by to-address and token address (not mandatory) ordered by creation timestamp.
-
-```clojure
-(transaction/receive-transaction db-spec "to-address" "token-address")
-```
-
-`mempool-transaction` takes 3 parameters - db spec, interval in which to check for new transactions and third parameter shouldn't be used directly, it's used by scheduler that runs this function periodically. The function transfers balance and removes transaction from mempool. It' supposed to run each 5 minutes (configurable) when you run libVTX service.
-For testing purposes, pass `0` as interval and the function will process all unprocessed entries immediately.
-
-```clojure
-(transaction/mempool-transaction db-spec 0 nil)
-```
-
-`transaction-confirmations` takes 2 or 3 parameters - db spec, transaction id and block time which defaults to 120 seconds if not provided. The function simulates getting confirmations from gateways. For testing purposes, use block time `1` or some other small number so you don't have to wait too long before confirmations start to add up.
-
-```clojure
-(transaction/transaction-confirmations db-spec transaction-id 1) 
-```
-
 ## Performance testing (research results)
 
 As an result of performance testing research we can run simple benchmark example. It will fire 50 requests to hit one services and it will produce some report.
