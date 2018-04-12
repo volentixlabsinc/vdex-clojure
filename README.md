@@ -1,5 +1,6 @@
 # vDex #
 
+vDex is whole backend side for decentralized exchange that will allow users to trade crypto assets with other users of the wallet, notably in a peer-to-peer fashion without losing custody of the tokens they hold.
 
 ## Conventions
 
@@ -35,29 +36,49 @@ Whole project is developed in Clojure.
 
 ## Project structure
 
-Project contains microservices as an base for further development:
+Project contains 5 microservices as an base for further development:
 
 - `blockchain-writer`
 - `matching-engine`
 - `mempool`
 - `snapshot-maker`
 - `transaction-verification`
-- `libVTX`
+
+and core library with main abstraction for whole system
+
+- `libvtx`
+
+Each microservice is placeholder for features that we will implement in the future.  
+
+## Apache Kafka 
 
 3 microservices are connected using `Kafka`:
 
+```
 `mempool` -> kafka `orderflow` topic -> `matching-engine`
                                      -> `blockchain-writer`
+```
 
-as an example of using `Kafka` to send data between microservices.
+as an example of using `Kafka` to send data between microservices. There will be more in futur
+when we make more decisions. Now there is a lot of research going on.
 
-Each microservice folder contains information how to run microservice for development purpouse.
+![Kafka connection](docs/kafka-connection.png)
+
+Mempool now contains API for Kafka connection testing. To see the flow when system is running, execute 
+
+```bash
+curl -d '{"key":"42", "msg":"foobar"}' -H "Content-Type: application/json" -X POST http://localhost:5002/order
+```
+
+It will send dummy message. As an result you should see 2 printed messages in console (as an result of received data by those microservices).
 
 ## Microservices
 
+Each microservice folder contains information how to run microservice for development purpouse.
+
 ### Blockchain writer
 
-Writes confirmed transaction into the blockchain.
+Microservice that will be responsible for writing confirmed transaction into the blockchain.
 To verify that it's running, execute
 
 ```bash
@@ -68,7 +89,7 @@ Result should be a status 200 response.
 
 ### Matching engine
 
-Matches ask and bid orders, creates transactions and manages desposits and withdrawals.
+Microservice that will be responsible for matching sell orders (`asks`) and buy orders (`bids`), and creates transactions (trdes).
 To verify that it's running, execute
 
 ```bash
@@ -79,7 +100,7 @@ Result should be a status 200 response.
 
 ### Mempool
 
-Stores transactions until they are verified.
+Microservice that will be responsible for storing new proposed transactions from the exchange network until they will be verified and propogated further.
 To verify that it's running, execute
 
 ```bash
@@ -88,15 +109,9 @@ curl http://localhost:5002
 
 Result should be a status 200 response.
 
-Mempool now contains API for Kafka testing. To see the flow when system is running, execute 
-
-```bash
-curl -d '{"key":"42", "msg":"foobar"}' -H "Content-Type: application/json" -X POST http://localhost:5002/order
-```
-
 ### Snapshot maker
 
-Saves transaction snapshots to disk for later usage.
+Microservice that will be responsible for saving transactions snapshots to disk for later usage.
 To verify that it's running, execute
 
 ```bash
@@ -107,18 +122,50 @@ Result should be a status 200 response.
 
 ### Transaction verification
 
-Verifies transactions.
+Microservice that will be responsible for transactions verification.
 To verify that it's running, execute
 
 ```bash
 curl http://localhost:5004
 ```
 
-Result should be a status 200 response.
+## Running microservices ##
 
-### libVTX
+Whose setup is based on Docker.
 
-Library for working with transactions, balances, deposits and tokens. It will provide API for transaction signing at later stages of development.
+![System architecture](docs/system.png)
+
+To run the microservices and Kafka node, run following command from root directory of the repo:
+
+```sh
+docker-compose up
+```
+
+or for silent start
+
+```sh
+docker-compose up -d
+```
+
+after Dockerfile changes, run
+
+```sh
+docker-compose up -d --build
+```
+
+this command takes several minutes to complete.
+
+You can find services running on following ports:
+
+- blockchain-writer `http://localhost:5000`
+- matching-engine `http://localhost:5001`
+- mempool `http://localhost:5002`
+- snapshot-maker `http://localhost:5003`
+- transaction-verification `http://localhost:5004`
+
+## libVTX
+
+libVTX is library for working with transactions, balances, deposits and tokens. It will provide API for transaction signing at later stages of development. It will be shared between microservices.
 
 To verify it's running, execute
 
@@ -128,9 +175,9 @@ curl http://localhost:5005
 
 Result should be a status 200 response.
 
-#### Usage
+### Usage
 
-##### Transaction
+#### Transaction
 
 ```clojure
 (require '[libvtx.transaction :as transaction])
@@ -168,37 +215,6 @@ For testing purposes, pass `0` as interval and the function will process all unp
 ```clojure
 (transaction/transaction-confirmations db-spec transaction-id 1) 
 ```
-
-## Running microservices ##
-
-To run the microservices and Kafka node, run following command from root directory of the repo:
-
-```sh
-docker-compose up
-```
-
-or for silent start
-
-```sh
-docker-compose up -d
-```
-
-after Dockerfile changes, run
-
-```sh
-docker-compose up -d --build
-```
-
-this command takes several minutes to complete.
-
-You can find services running on following ports:
-
-- blockchain-writer `http://localhost:5000`
-- matching-engine`http://localhost:5001`
-- mempool`http://localhost:5002`
-- snapshot-maker`http://localhost:5003`
-- transaction-verification`http://localhost:5004`
-- libVTX `http://localhost:5005`
 
 ## Performance testing (research results)
 
