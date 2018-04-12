@@ -65,64 +65,103 @@ But you can also run tests through Leiningen.
 lein test
 ```
 
-## Research -> Engine state
+## Algorithm
 
-### Market
+### Engine
 
-* `name` - each currencies pair is name of the market (combination of `base-currency` into `market-currency`) for instance `"BTC-LTC"`; it represents all exchangesfrom `base-currency` into `market-currency`
-* `open-buy-orders-cnt`
-* `open-sell-orders-cnt`
+Each matching engine is responsible for matching orders for only one market (pair of tokens). For instance matching engine fot `BTCETH` market is responsible for matching buy end sell orders in exchange between `BTC` and `ETH` tokens.
 
-### Order books
+Matching engine initialization
 
-* each currencies pair (market) has its own order book, for instance "BTC-LTC"
-* each order book has two sides - `bids` (buying orders) and `asks` (selling orders)
+```clojure
+(engine/init "BTCETH" 10)
+```
 
-### Order
+Each matching engine is also initializad with `reference price`. Engine structure
 
-* `account-id` - uuid
-* `order-id` - uuid
-* `public-key-ring`
-* `sender-ip`
-* `sender-ip-port`
-* `market` - "BTC-SHLD" 
-* `type` - "limit-buy", "limit-sell", "stop-loss", "market"
-* `quantity` - how much I order/sell
-* `quantity-remaining` - remaining quantity to sell/order
-* `limit`
-* `price` - price tha I am intrested in
-* `price-per-unit`
-* `commmision`
-* `total`
-* `nonce` - (now)
-* `opened-at`
-* `closed-at`
-* `signature` ?????
+```clojure
+(defrecord MatchingEngine [buy sell accounts trades reference-price])
+```
+Each matching engine contains 2 orderbooks
 
-### Currency
+- `buy` (bids) - orderbook with buy orders
+- `sell` (asks) - orderbook with sell orders
+- `accounts` - not used yet
+- `trades` - results of match buy and sell order
+- `reference-price` - last trade price, it's used in corner case when we match market orders agains other market orders and there is no limit orders available.
 
-* `name`
-* `name-long`
-* `transaction-fee`
-* `minimum-confirmation`
+![Matching engine structure](docs/matching-engine.png)
 
-### Trade/transaction
+### Orderbook
 
-* `order-type` - `sell` or `buy`
-* `accont-id`
-* `address`
-* `order-id` - uuid value
-* `market` - "BTC-SHLD" 
-* `quantity` - amount of base currency
-* `price` 
-* `total`
-* `created-at`
+Each orderbook represent one side of a particular market - buy side or sell order
 
-### Address
+Orderbook can be initialized from collection of orders or empty
+```Clojure
+;; initialize from orders
+(orderbook/from-orders [order-1 order-2] "BTCETH" order/BUY)
+;; or empty orderbook
+(orderbook/init {:market "BTCETH" :side order/BUY})
+```
 
-* `uuid`
-* `address` - as string
-* `network` - blockchain type, "Bitcoin", ...
+Matching engine will create orderbook for buy and sell side automatically during initialization.
+
+Orderbook structure
+
+```clojure
+(defrecord OrderBook [market side limit-orders market-orders])
+```
+
+![Orderbook structure](docs/orderbook-structure.png)
+
+### Orders
+
+Order is one side of trade proposition for particular market 
+
+```clojure
+(defrecord Order [from-address market side amount price])
+```
+
+Each order contains:
+
+- `from-adress` sender address
+- `market` name of tokens pair (market name), for instance `BTCETH`
+- `side` order/BUY (1) or order/SELL (2) - and int value
+- `amount` - how many assets do you want to sell or buy 
+- `price` - price level on which we want sell or buy an asset
+
+### Order types
+
+Order for each side (buy or sell) might be one of 2 order types:
+
+- `limit order` 
+- `market order`
+
+![Order types](docs/order-types.png)
+
+Limit order has price that represents limit. For buy order it indicates maximum price at witch someone is willing to buy some asset. For sell order it indicates minimum price at which someone is willing to sell some asset.
+
+Market order has no price. Market order accepts best price on oposite side or last trade price if there no limit orders on oposite side.
+
+### Trade
+
+Trade is an result of matching buy and sell order. When trade is created than matched orders amount are drained (decreased) by minimum possible amount.
+
+```clojure
+(defrecord Trade [buyer-address seller-address market amount price])
+```
+
+Trade contains:
+
+- `buyer-address`
+- `seller-address`
+- `market` market name
+- `amount` asset exchange amount
+- `price` asset exchange price
+
+### Matching orders
+
+Whole algorithm was implemented based on scala example from https://github.com/prystupa/scala-cucumber-matching-engine
 
 ## Legal
 
