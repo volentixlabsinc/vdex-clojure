@@ -17,12 +17,12 @@
 
 
 (def token2 {:address "bar"
-                  :name "ETH"
-                  :precision "18"
-                  :pairs-with ["foo"]})
+             :name "ETH"
+             :precision "18"
+             :pairs-with ["foo"]})
 
 
-(deftest balance-test
+(deftest token-test
   (let [db-spec (->db-spec *conf*)]
     (testing "should create new token and new pair"
       (let [_ (db/create-token db-spec token1)
