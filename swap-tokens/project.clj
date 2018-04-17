@@ -10,9 +10,9 @@
 
                  ;; cljs stuff
                  ;; [cljsjs/web3 "0.19.0-0"]
-                 [cljs-web3 "0.19.0-0-11"]
+                 #_[cljs-web3 "0.19.0-0-11"]
                  ;; [cljsjs/zero-ex "0.21.0-0"]
-                 [print-foo-cljs "2.0.3"]]
+                 #_[print-foo-cljs "2.0.3"]]
 
   :plugins [[duct/lein-duct "0.10.6"]
             [lein-cljsbuild "1.1.6"]]
