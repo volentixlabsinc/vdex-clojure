@@ -25,6 +25,10 @@
   :resource-paths ["resources" "target/resources"]
   :prep-tasks     ["javac" "compile" ["run" ":duct/compiler"]]
 
+  :npm {:dependencies [[web3 "0.19.0"]
+                       [ganache-core "2.0.2"]]
+        :devDependencies [[ws "2.0.1"]]}
+
   :profiles
   {:dev  [:project/dev :profiles/dev]
    :repl {:prep-tasks   ^:replace ["javac" "compile"]
@@ -45,6 +49,7 @@
                                    [org.clojure/tools.nrepl "0.2.13"]]
                   :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
                   :plugins [[lein-figwheel "0.5.13"]
+                            [lein-npm "0.6.2"]
                             [lein-doo "0.1.8"]]}}
 
   :cljsbuild
