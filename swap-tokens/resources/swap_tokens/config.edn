@@ -2,7 +2,7 @@
  :duct.core/environment :production
 
  :duct.module/logging {}
- :duct.module/web {}
+ :duct.module.web/site {}
 
  :swap-tokens.handler/web {}
 

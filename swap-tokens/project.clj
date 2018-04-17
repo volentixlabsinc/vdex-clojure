@@ -3,12 +3,12 @@
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.9.0"]
+                 [org.clojure/clojurescript "1.9.946"]
                  [duct/core "0.6.2"]
                  [duct/module.logging "0.3.1"]
                  [duct/module.web "0.6.3"]
 
                  ;; cljs stuff
-                 [org.clojure/clojurescript "1.9.946"]
                  ;; [cljsjs/web3 "0.19.0-0"]
                  [cljs-web3 "0.19.0-0-11"]
                  ;; [cljsjs/zero-ex "0.21.0-0"]
@@ -48,7 +48,7 @@
   {:builds
    [{:id "dev"
      :source-paths ["src/cljs" "src/cljc" "dev/src/cljs"]
-     :compiler {:main app.dev
+     :compiler {:main swap-tokens.dev
                 :output-to "resources/swap_tokens/public/js/compiled/app/app.js"
                 :output-dir "resources/swap_tokens/public/js/compiled/app/out"
                 :asset-path "js/compiled/app/out"
@@ -56,13 +56,11 @@
                 :preloads [devtools.preload]
                 :external-config {:devtools/config {:features-to-install :all}}}}
 
-    {:id "test"
+    #_{:id "test"
      :source-paths ["src/cljs" "src/cljc" "test/cljs" "test/cljc"]
      :compiler {:main swap-tokens.runner
                 :output-to "resources/swap_tokens/public/js/compiled/test.js"
                 :output-dir "resources/swap_tokens/public/js/compiled/test/out"
                 :optimizations :none
                 ;workaround for running lein doo with latest CLJS, see https://github.com/bensu/doo/pull/141
-                :process-shim false}}]}
-
-  )
+                :process-shim false}}]})
