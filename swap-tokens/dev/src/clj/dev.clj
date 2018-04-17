@@ -12,18 +12,9 @@
             [integrant.repl :refer [clear halt go init prep reset]]
             [integrant.repl.state :refer [config system]]))
 
-(def figwheel (atom nil))
-
-(def start-figwheel! figwheel-repl/start-figwheel!)
-
-(defn stop-figwheel!
-  []
-  (if (nil? @figwheel)
-    (println "Figwheel is not running!")
-    (do
-      (figwheel-repl/stop-figwheel!)
-      (reset! figwheel nil))))
-
+(def ui        figwheel-repl/start-figwheel!)
+(def ui-stop   figwheel-repl/stop-figwheel!)
+(def cljs-repl figwheel-repl/cljs-repl)
 
 (duct/load-hierarchy)
 
@@ -39,3 +30,21 @@
   (load "local"))
 
 (integrant.repl/set-prep! (comp duct/prep read-config))
+
+;; commands
+(comment
+  (dev)
+
+  (go)
+
+  (ui)
+
+  (cljs-repl)
+
+  (ui-stop)
+
+  (halt)
+
+  (reset)
+
+)
