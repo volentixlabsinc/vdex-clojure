@@ -1,6 +1,6 @@
 # swap_tokens
 
-FIXME: description
+Initial prototype for working with 0x using cljs.  
 
 ## Developing
 
@@ -17,11 +17,15 @@ for the project.
 
 ### Environment
 
+#### REPL
+
 To begin developing, start with a REPL.
 
 ```sh
 lein repl
 ```
+
+#### Dev backend
 
 Then load the development environment.
 
@@ -34,11 +38,11 @@ Run `go` to prep and initiate the system.
 
 ```clojure
 dev=> (go)
-:duct.server.http.jetty/starting-server {:port 3000}
+:duct.server.http.jetty/starting-server {:port 5000}
 :initiated
 ```
 
-By default this creates a web server at <http://localhost:3000>.
+By default this creates a web server at <http://localhost:5000>.
 
 When you make changes to your source files, use `reset` to reload any
 modified files and reset the server.
@@ -49,7 +53,31 @@ dev=> (reset)
 :resumed
 ```
 
+#### UI
+
+Start CLJS UI. It will start figwheel server that will continously compile cljs files and refresh browser UI
+
+```clojure
+dev=> (ui)
+```
+
+You can also stop the UI
+
+```clojure
+dev=> (ui-stop)
+```
+
+#### CLJS REPL
+
+If you want sent CLJS commands one by one directy from editor to change UI state you can start CLJS REPL
+
+```clojure
+dev=> (cljs-repl)
+```
+
 ### Testing
+
+#### Backend tests
 
 Testing is fastest through the REPL, as you avoid environment startup
 time.
