@@ -9,9 +9,10 @@
                  [duct/module.web "0.6.3"]
 
                  ;; cljs stuff
-                 ;; [cljsjs/web3 "0.19.0-0"]
-                 #_[cljs-web3 "0.19.0-0-11"]
-                 ;; [cljsjs/zero-ex "0.21.0-0"]
+                 [mount "0.1.11"]
+                 #_[cljsjs/web3 "0.19.0-0"]
+                 [cljs-web3 "0.19.0-0-11"] ;; cljs web3 wrapper
+                 [cljsjs/zero-ex "0.21.0-0"]
                  #_[print-foo-cljs "2.0.3"]]
 
   :plugins [[duct/lein-duct "0.10.6"]

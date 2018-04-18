@@ -19,6 +19,11 @@ for the project.
 
 #### REPL
 
+Download dependencies required for Node.js modules
+
+```sh
+lein deps
+```
 To begin developing, start with a REPL.
 
 ```sh
@@ -44,7 +49,7 @@ dev=> (go)
 
 By default this creates a web server at <http://localhost:5000>.
 
-When you make changes to your source files, use `reset` to reload any
+When you make changes to your clj (Clojure) source files, use `reset` to reload any
 modified files and reset the server.
 
 ```clojure
