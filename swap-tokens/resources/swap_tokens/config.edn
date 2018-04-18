@@ -1,0 +1,14 @@
+{:duct.core/project-ns  swap-tokens
+ :duct.core/environment :production
+
+ :duct.module/logging {}
+ :duct.module.web/site {}
+
+ :swap-tokens.handler/web {}
+
+ :duct.router/cascading [#ig/ref :swap-tokens.handler/web]
+
+ :duct.server.http/jetty
+ {:port #duct/env ["PORT" Int :or 5000]
+  :handler #ig/ref :duct.core/handler
+  :logger  #ig/ref :duct/logger}}
