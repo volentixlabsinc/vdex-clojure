@@ -1,0 +1,19 @@
+{
+  "name": "vdex-cosmos-examples",
+  "version": "0.0.1",
+  "description": "examples",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Mariusz Jachimowicz",
+  "dependencies": {
+    "lotion": "^0.1.17",
+    "lotion-coin": "0.0.1",
+    "axios": "^0.16.2"
+  }
+}
